@@ -14,11 +14,17 @@ sudo systemctl start postgresql-14
 sudo systemctl restart postgresql-14
 
 # postgreSQLの設定に外部接続を許容する
+echo '外部接続設定...'
 sudo sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /var/lib/pgsql/14/data/postgresql.conf
 sudo sh -c "echo 'host    all             all             0.0.0.0/0               md5' >> /var/lib/pgsql/14/data/pg_hba.conf"
 sudo systemctl restart postgresql-14
 
 # PostgreSQLユーザーのパスワード変更
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+echo 'Postgreユーザーの設定変更...'
+sudo -u postgres psql -c "ALTER USER postgres WITH ENCRYPTED PASSWORD 'postgres';"
 
+
+# pg_ctlコマンド設定
+sudo echo 'export PATH="$PATH:/usr/pgsql-14/bin"' >> /home/vagrant/.bashrc
+source /home/vagrant/.bashrc
 echo 'start PosregSQL構築終了'
