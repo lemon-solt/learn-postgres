@@ -4,22 +4,39 @@
 vagrant up --provision
 ```
 
-# ユーザーと DB を作成する
-
+# 環境構築後にユーザーの作成とDBを作成
 ```
-# rootユーザー以外でDBにアクセスできるようにする
+# ssh接続
+vagrant ssh
 
-# user作成
-createuser --interactive sample_user
+# ルートユーザーでログイン
+su -
+（password：vagrant）
+
+# postgresユーザーでログイン
+su - postgres
+
+# user作成（今回はgwpというユーザー名を指定）
+createuser --interactive gwp
 
 # testdb作成とオーナーをuserにする
-createdb -O sample_user pdadmin
+createdb -O gwp gwp
 
+# psqlモードで作成したユーザーのパスワードを変更する
+ALTER USER gwp WITH ENCRYPTED PASSWORD 'gwp';
 ```
 
-# ユーザー設定を行う
-
+# DBクライアントで接続を試す
 ```
-# testdbにログイン
-psql pgadmin
+クライアントは使い慣れているツールで問題無い
+[接続情報]
+・ユーザー：gwp
+・パスワード：gwp
+・portは任意だが基本は5432
+```
+
+
+# 指定のDBにログイン
+```
+psql {DB名}
 ```
